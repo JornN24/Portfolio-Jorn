@@ -31,20 +31,17 @@
     position: absolute;
     top: 15px;
     right: 15px;
-    background: #C8ACD6;
-    color: #433D8B;
+    background: transparent;
+    color: red;
     border: none;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
     transition: transform 0.3s ease;
     z-index: 2;
 }
 
 .close-button1:hover {
-    transform: scale(1.1);
+    transform: scale(1.5);
 }
 
 /* Modal Content */
