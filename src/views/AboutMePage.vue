@@ -44,7 +44,7 @@
           </div>
 
           <!-- Download CV Button -->
-          <a href="../assets/CVJornNoten.pdf" download="CVJornNoten.pdf">
+          <a href="../../public/assets/CVJornNoten.pdf" download="CVJornNoten.pdf">
             <button class="download-cv-button">Download CV</button>
           </a>        </div>
       </div>
