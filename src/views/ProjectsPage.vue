@@ -451,10 +451,11 @@ export default {
   height: 100%;
 }
 
+/* Position the intro text at the top */
 .intro-text {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  top: 20px;
+  left: 20px; /* Change to left: 50%; transform: translateX(-50%); to center */
   font-size: 25px;
   color: white;
 }
