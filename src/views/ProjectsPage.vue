@@ -456,7 +456,7 @@ export default {
   position: absolute;
   top: 20px;
   left: 20px;
-  font-size: 20px;
+  font-size: 17px;
   color: #C8ACD6;
 }
 </style>
