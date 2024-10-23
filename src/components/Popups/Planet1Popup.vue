@@ -99,7 +99,6 @@
 </template>
 
 <script>
-// Import your images and video here
 import bewitched from '@/assets/img/JatwwProject/bewitched.png';
 import jatwwcharacters from '@/assets/img/JatwwProject/jatwwcharacters.png';
 import jatwwGame from '@/assets/img/JatwwProject/jatwwGame.png';

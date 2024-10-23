@@ -81,7 +81,6 @@
 
 
 <script>
-// Import your images here
 import Safeshare1 from '@/assets/img/stageProwise/prowise.png';
 import Safeshare2 from '@/assets/img/stageProwise/prowiseSafeShare.png';
 import Safeshare3 from '@/assets/img/stageProwise/prowiseSafeShare2.png';

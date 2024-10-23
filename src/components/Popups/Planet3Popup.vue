@@ -100,7 +100,6 @@
 
 
 <script>
-// Import your images here
 import zombieBaller from '@/assets/img/ZombieBaller/zombieBaller.png';
 import zombieBallerVideo from '@/assets/img/ZombieBaller/zombieballer.mp4';
 import zombieBallerVideo2 from '@/assets/img/ZombieBaller/zombieballer2.mp4';

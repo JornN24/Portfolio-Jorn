@@ -44,13 +44,14 @@
           </div>
 
           <!-- Download CV Button -->
-          <a href="../../public/assets/CVJornNoten.pdf" download="CVJornNoten.pdf">
+          <a href="../assets/CVJornNoten.pdf" download="CVJornNoten.pdf">
             <button class="download-cv-button">Download CV</button>
-          </a>        </div>
+          </a>
+        </div>
       </div>
     </div>
 
-    <!-- Skills Section -->
+    <!-- Skills Header -->
     <div class="skills-section" ref="skills">
       <h2>My Skills</h2>
       <p>"Skills are not just about what you can do, but about how you adapt, learn, and grow when faced with new challenges."</p>
