@@ -4,8 +4,8 @@
 
 <script>
 import * as THREE from 'three';
-import {FontLoader} from 'three/examples/jsm/loaders/FontLoader.js';
-import {TextGeometry} from 'three/examples/jsm/geometries/TextGeometry.js';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 export default {
   name: 'WelcomePage',
@@ -14,6 +14,7 @@ export default {
       transitioning: false,
       mouse: new THREE.Vector2(),
       startTime: null,
+      isMobile: window.innerWidth < 768,
     };
   },
   mounted() {
@@ -26,19 +27,22 @@ export default {
     this.animate = this.animate.bind(this);
     this.animate();
 
-    // Add event listeners for window resize and mouse movement
+    // Add event listeners for window resize and input (mouse/touch)
     window.addEventListener('resize', this.onWindowResize, false);
     window.addEventListener('mousemove', this.onMouseMove, false);
+    window.addEventListener('touchmove', this.onTouchMove, false);
     this.renderer.domElement.addEventListener('click', this.onClick.bind(this), false);
+    this.renderer.domElement.addEventListener('touchend', this.onClick.bind(this), false);
   },
   beforeUnmount() {
     // Remove event listeners to prevent memory leaks
     window.removeEventListener('resize', this.onWindowResize, false);
     window.removeEventListener('mousemove', this.onMouseMove, false);
+    window.removeEventListener('touchmove', this.onTouchMove, false);
 
-    // If the renderer is attached to the DOM, remove the event listener
     if (this.renderer && this.renderer.domElement) {
       this.renderer.domElement.removeEventListener('click', this.onClickBound, false);
+      this.renderer.domElement.removeEventListener('touchend', this.onClickBound, false);
     }
 
     // Cancel the animation frame
@@ -80,11 +84,12 @@ export default {
 
       // Set up camera
       this.camera = new THREE.PerspectiveCamera(45, width / height, 1, 2000);
-      this.camera.position.z = 100;
+      this.camera.position.z = this.isMobile ? 150 : 100;
 
       // Set up renderer
-      this.renderer = new THREE.WebGLRenderer({antialias: true});
+      this.renderer = new THREE.WebGLRenderer({ antialias: true });
       this.renderer.setSize(width, height);
+      this.renderer.setPixelRatio(window.devicePixelRatio);
       this.renderer.setClearColor(color4);
       this.$refs.container.appendChild(this.renderer.domElement);
 
@@ -101,20 +106,20 @@ export default {
         const text = 'WELCOME';
         const textGeometry = new TextGeometry(text, {
           font: font,
-          size: 20,
+          size: this.isMobile ? 10 : 20,
           height: 5,
           curveSegments: 12,
         });
         textGeometry.computeBoundingBox();
         textGeometry.center();
 
-        const textMaterial = new THREE.MeshPhongMaterial({color: color1});
+        const textMaterial = new THREE.MeshPhongMaterial({ color: color1 });
         this.textMesh = new THREE.Mesh(textGeometry, textMaterial);
         this.scene.add(this.textMesh);
 
         const instructionWords = ['Click', 'to', 'continue'];
         const instructionMeshes = [];
-        const wordSpacing = 2;
+        const wordSpacing = this.isMobile ? 1 : 2;
         let totalWidth = 0;
         const wordGeometries = [];
 
@@ -122,7 +127,7 @@ export default {
           const word = instructionWords[i];
           const wordGeometry = new TextGeometry(word, {
             font: font,
-            size: 5,
+            size: this.isMobile ? 2.5 : 5,
             height: 1,
             curveSegments: 12,
           });
@@ -131,19 +136,19 @@ export default {
           const wordWidth = wordGeometry.boundingBox.max.x - wordGeometry.boundingBox.min.x;
           totalWidth += wordWidth + wordSpacing;
 
-          wordGeometries.push({geometry: wordGeometry, width: wordWidth, word});
+          wordGeometries.push({ geometry: wordGeometry, width: wordWidth, word });
         }
 
         totalWidth -= wordSpacing;
         let currentPosition = -totalWidth / 2;
 
         for (let i = 0; i < wordGeometries.length; i++) {
-          const {geometry, width, word} = wordGeometries[i];
+          const { geometry, width, word } = wordGeometries[i];
           let material;
           if (word === 'Click') {
-            material = new THREE.MeshPhongMaterial({color: color1});
+            material = new THREE.MeshPhongMaterial({ color: color1 });
           } else {
-            material = new THREE.MeshPhongMaterial({color: color2});
+            material = new THREE.MeshPhongMaterial({ color: color2 });
           }
           const mesh = new THREE.Mesh(geometry, material);
           mesh.position.x = currentPosition;
@@ -162,7 +167,7 @@ export default {
       this.onClickBound = this.onClick.bind(this);
     },
     createParticles(colorStart, colorEnd) {
-      const particleCount = 5000;
+      const particleCount = this.isMobile ? 1500 : 5000;
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
 
@@ -185,7 +190,7 @@ export default {
       geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
       const material = new THREE.PointsMaterial({
-        size: 2,
+        size: this.isMobile ? 4 : 2,
         transparent: true,
         opacity: 0.7,
         sizeAttenuation: true,
@@ -235,6 +240,7 @@ export default {
       this.renderer.render(this.scene, this.camera);
     },
     onWindowResize() {
+      this.isMobile = window.innerWidth < 768;
       const width = window.innerWidth;
       const height = window.innerHeight;
       this.renderer.setSize(width, height);
@@ -244,6 +250,13 @@ export default {
     onMouseMove(event) {
       this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    },
+    onTouchMove(event) {
+      if (event.touches.length > 0) {
+        const touch = event.touches[0];
+        this.mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+        this.mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+      }
     },
     onClick(event) {
       if (this.transitioning) return;
