@@ -17,15 +17,15 @@
 </template>
 
 <script>
-import {markRaw} from 'vue';
+import { markRaw } from 'vue';
 import * as THREE from 'three';
-import {gsap} from 'gsap';
+import { gsap } from 'gsap';
 import Planet1Popup from '@/components/Popups/Planet1Popup.vue';
 import Planet2Popup from '@/components/Popups/Planet2Popup.vue';
 import Planet3Popup from '@/components/Popups/Planet3Popup.vue';
 import Planet4Popup from '@/components/Popups/Planet4Popup.vue';
 import Planet5Popup from '@/components/Popups/Planet5Popup.vue';
-import HamburgerMenu from "@/components/HamburgerMenu.vue";
+import HamburgerMenu from '@/components/HamburgerMenu.vue';
 
 export default {
   components: {
@@ -101,7 +101,9 @@ export default {
       );
       this.camera.position.z = this.isMobile ? 500 : 300;
 
-      this.renderer = markRaw(new THREE.WebGLRenderer({antialias: true, alpha: true}));
+      this.renderer = markRaw(
+          new THREE.WebGLRenderer({ antialias: true, alpha: true })
+      );
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       this.renderer.setClearColor('#000100', 1);
       this.$refs.container.appendChild(this.renderer.domElement);
@@ -127,16 +129,16 @@ export default {
       this.animate();
 
       // Event listeners for interactions
-      window.addEventListener('mousemove', this.onMouseMove);
+      window.addEventListener('pointermove', this.onPointerMove);
       window.addEventListener('resize', this.onWindowResize);
-      window.addEventListener('click', this.onMouseClick);
+      window.addEventListener('pointerdown', this.onPointerDown);
       window.addEventListener('keydown', this.onKeyDown);
     },
     // Clean up resources and event listeners
     cleanup() {
-      window.removeEventListener('mousemove', this.onMouseMove);
+      window.removeEventListener('pointermove', this.onPointerMove);
       window.removeEventListener('resize', this.onWindowResize);
-      window.removeEventListener('click', this.onMouseClick);
+      window.removeEventListener('pointerdown', this.onPointerDown);
       window.removeEventListener('keydown', this.onKeyDown);
 
       if (this.renderer) {
@@ -222,7 +224,9 @@ export default {
     createLatheGeometry() {
       const points = [];
       for (let i = 0; i < 10; i++) {
-        points.push(new THREE.Vector2(Math.sin(i * 0.2) * 20 + 10, (i - 5) * 4));
+        points.push(
+            new THREE.Vector2(Math.sin(i * 0.2) * 20 + 10, (i - 5) * 4)
+        );
       }
       return new THREE.LatheGeometry(points, 64);
     },
@@ -231,28 +235,23 @@ export default {
       this.planets = [];
       this.planetInitialPositions = [];
 
-      const planetColors = [
-        '#C8ACD6',
-        '#433D8B',
-        '#1230AE',
-        '#9506e0',
-      ];
+      const planetColors = ['#C8ACD6', '#433D8B', '#1230AE', '#9506e0'];
 
       // Updated positions based on device
       const planetPositions = this.isMobile
           ? [
-            {x: 0, y: 120, z: 70},
-            {x: 0, y: 60, z: 37.5},
-            {x: 0, y: 0, z: 30.5},
-            {x: 0, y: -60, z: 52.5},
-            {x: 0, y: -120, z: 0},
+            { x: 0, y: 120, z: 70 },
+            { x: 0, y: 60, z: 37.5 },
+            { x: 0, y: 0, z: 30.5 },
+            { x: 0, y: -60, z: 52.5 },
+            { x: 0, y: -120, z: 0 },
           ]
           : [
-            {x: -150, y: 75, z: 70},
-            {x: -15, y: 140, z: 37.5},
-            {x: -120, y: -120, z: 30.5},
-            {x: 120, y: 30, z: 52.5},
-            {x: 100, y: -105, z: 0},
+            { x: -150, y: 75, z: 70 },
+            { x: -15, y: 140, z: 37.5 },
+            { x: -120, y: -120, z: 30.5 },
+            { x: 120, y: 30, z: 52.5 },
+            { x: 100, y: -105, z: 0 },
           ];
 
       // Define available shapes and their corresponding creation functions
@@ -273,11 +272,14 @@ export default {
 
       for (let i = 0; i < numberOfPlanets; i++) {
         // Randomly select a shape
-        const randomShapeIndex = Math.floor(Math.random() * shapeCreators.length);
+        const randomShapeIndex = Math.floor(
+            Math.random() * shapeCreators.length
+        );
         const geometry = shapeCreators[randomShapeIndex].call(this);
 
         // Randomly select a color
-        const color = planetColors[Math.floor(Math.random() * planetColors.length)];
+        const color =
+            planetColors[Math.floor(Math.random() * planetColors.length)];
 
         // Create the main planet mesh with enhanced material for visibility
         const material = new THREE.MeshStandardMaterial({
@@ -295,16 +297,20 @@ export default {
         planet.position.set(position.x, position.y, position.z);
 
         planet.name = `Planet${i + 1}`;
-        planet.userData = {popupIndex: i};
+        planet.userData = { popupIndex: i };
 
-        this.planetInitialPositions.push({x: position.x, y: position.y, z: position.z});
+        this.planetInitialPositions.push({
+          x: position.x,
+          y: position.y,
+          z: position.z,
+        });
 
         this.scene.add(planet);
         this.planets.push(planet);
       }
     },
-    // Handle mouse movement for interactions
-    onMouseMove(event) {
+    // Handle pointer movement for interactions
+    onPointerMove(event) {
       this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -345,7 +351,7 @@ export default {
       // Reposition planets for responsiveness
       this.planets.forEach((planet, index) => {
         const newPosition = this.isMobile
-            ? {x: 0, y: 120 - index * 60, z: 50}
+            ? { x: 0, y: 120 - index * 60, z: 50 }
             : this.planetInitialPositions[index];
         gsap.to(planet.position, {
           x: newPosition.x,
@@ -356,8 +362,8 @@ export default {
         });
       });
     },
-    // Handle mouse click events
-    onMouseClick(event) {
+    // Handle pointer down events
+    onPointerDown(event) {
       this.checkPlanetClick(event);
     },
     // Check if a planet was clicked and open corresponding popup
@@ -408,8 +414,10 @@ export default {
 
       // Smooth camera movement based on mouse position
       if (!this.isMobile) {
-        this.camera.position.x += (this.mouse.x * 100 - this.camera.position.x) * 0.05;
-        this.camera.position.y += (this.mouse.y * 100 - this.camera.position.y) * 0.05;
+        this.camera.position.x +=
+            (this.mouse.x * 100 - this.camera.position.x) * 0.05;
+        this.camera.position.y +=
+            (this.mouse.y * 100 - this.camera.position.y) * 0.05;
       }
 
       this.camera.lookAt(this.scene.position);
