@@ -455,8 +455,8 @@ export default {
 .intro-text {
   position: absolute;
   top: 20px;
-  left: 20px; /* Change to left: 50%; transform: translateX(-50%); to center */
-  font-size: 25px;
-  color: white;
+  left: 20px;
+  font-size: 20px;
+  color: #C8ACD6;
 }
 </style>
