@@ -51,6 +51,7 @@ export default {
       animationFrameId: null,
       canOpenPopup: false,
       showIntroText: true,
+      isMobile: window.innerWidth < 768,
     };
   },
   mounted() {
@@ -89,7 +90,7 @@ export default {
     init() {
       this.scene = markRaw(new THREE.Scene());
 
-      // Adjusted Camera Position for Larger Planets
+      // Adjust camera position based on device
       this.camera = markRaw(
           new THREE.PerspectiveCamera(
               75,
@@ -98,7 +99,7 @@ export default {
               3000
           )
       );
-      this.camera.position.z = 300;
+      this.camera.position.z = this.isMobile ? 500 : 300;
 
       this.renderer = markRaw(new THREE.WebGLRenderer({antialias: true, alpha: true}));
       this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -185,51 +186,39 @@ export default {
       this.scene.add(this.particles);
     },
     // Geometry Creation Functions
-
     createBoxGeometry() {
       return new THREE.BoxGeometry(40, 40, 40);
     },
-
     createSphereGeometry() {
       return new THREE.SphereGeometry(20, 32, 32);
     },
-
     createConeGeometry() {
       return new THREE.ConeGeometry(20, 40, 32);
     },
-
     createCylinderGeometry() {
       return new THREE.CylinderGeometry(20, 20, 40, 32);
     },
-
     createTorusGeometry() {
       return new THREE.TorusGeometry(20, 6, 32, 200);
     },
-
     createTorusKnotGeometry() {
       return new THREE.TorusKnotGeometry(20, 6, 200, 32);
     },
-
     createOctahedronGeometry() {
       return new THREE.OctahedronGeometry(20);
     },
-
     createIcosahedronGeometry() {
       return new THREE.IcosahedronGeometry(20);
     },
-
     createDodecahedronGeometry() {
       return new THREE.DodecahedronGeometry(20);
     },
-
     createTetrahedronGeometry() {
       return new THREE.TetrahedronGeometry(20);
     },
-
     createCapsuleGeometry() {
       return new THREE.CapsuleGeometry(20, 40, 4, 16);
     },
-
     createLatheGeometry() {
       const points = [];
       for (let i = 0; i < 10; i++) {
@@ -237,7 +226,6 @@ export default {
       }
       return new THREE.LatheGeometry(points, 64);
     },
-
     // Add planets to the scene
     addPlanets() {
       this.planets = [];
@@ -250,14 +238,22 @@ export default {
         '#9506e0',
       ];
 
-      // Updated fixed positions
-      const planetPositions = [
-        {x: -150, y: 75, z: 70},
-        {x: -15, y: 140, z: 37.5},
-        {x: -120, y: -120, z: 30.5},
-        {x: 120, y: 30, z: 52.5},
-        {x: 100, y: -105, z: 0},
-      ];
+      // Updated positions based on device
+      const planetPositions = this.isMobile
+          ? [
+            {x: 0, y: 120, z: 70},
+            {x: 0, y: 60, z: 37.5},
+            {x: 0, y: 0, z: 30.5},
+            {x: 0, y: -60, z: 52.5},
+            {x: 0, y: -120, z: 0},
+          ]
+          : [
+            {x: -150, y: 75, z: 70},
+            {x: -15, y: 140, z: 37.5},
+            {x: -120, y: -120, z: 30.5},
+            {x: 120, y: 30, z: 52.5},
+            {x: 100, y: -105, z: 0},
+          ];
 
       // Define available shapes and their corresponding creation functions
       const shapeCreators = [
@@ -294,7 +290,7 @@ export default {
 
         const planet = markRaw(new THREE.Mesh(geometry, material));
 
-        // Assign fixed position
+        // Assign position based on device
         const position = planetPositions[i];
         planet.position.set(position.x, position.y, position.z);
 
@@ -340,9 +336,25 @@ export default {
     },
     // Handle window resize events
     onWindowResize() {
+      this.isMobile = window.innerWidth < 768;
+
       this.camera.aspect = window.innerWidth / window.innerHeight;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Reposition planets for responsiveness
+      this.planets.forEach((planet, index) => {
+        const newPosition = this.isMobile
+            ? {x: 0, y: 120 - index * 60, z: 50}
+            : this.planetInitialPositions[index];
+        gsap.to(planet.position, {
+          x: newPosition.x,
+          y: newPosition.y,
+          z: newPosition.z,
+          duration: 1,
+          ease: 'power1.out',
+        });
+      });
     },
     // Handle mouse click events
     onMouseClick(event) {
@@ -395,8 +407,10 @@ export default {
       });
 
       // Smooth camera movement based on mouse position
-      this.camera.position.x += (this.mouse.x * 100 - this.camera.position.x) * 0.05;
-      this.camera.position.y += (this.mouse.y * 100 - this.camera.position.y) * 0.05;
+      if (!this.isMobile) {
+        this.camera.position.x += (this.mouse.x * 100 - this.camera.position.x) * 0.05;
+        this.camera.position.y += (this.mouse.y * 100 - this.camera.position.y) * 0.05;
+      }
 
       this.camera.lookAt(this.scene.position);
 

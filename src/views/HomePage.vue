@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <div ref="container" class="three-container"></div>
-    <HamburgerMenu />
+    <HamburgerMenu/>
   </div>
 </template>
 
 <script>
 import * as THREE from 'three';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import {FontLoader} from 'three/examples/jsm/loaders/FontLoader.js';
+import {TextGeometry} from 'three/examples/jsm/geometries/TextGeometry.js';
 import HamburgerMenu from "@/components/HamburgerMenu.vue";
 
 export default {
@@ -25,6 +25,7 @@ export default {
       animationDuration: 2000,
       eventsAdded: false,
       animatedShapes: [],
+      isMobile: window.innerWidth < 768,
     };
   },
   mounted() {
@@ -39,11 +40,13 @@ export default {
 
     window.addEventListener('resize', this.onWindowResize, false);
     window.addEventListener('mousemove', this.onMouseMove, false);
+    window.addEventListener('touchmove', this.onTouchMove, false);
   },
   beforeUnmount() {
     // Remove event listeners to prevent memory leaks
     window.removeEventListener('resize', this.onWindowResize, false);
     window.removeEventListener('mousemove', this.onMouseMove, false);
+    window.removeEventListener('touchmove', this.onTouchMove, false);
     if (this.eventsAdded) {
       this.renderer.domElement.removeEventListener('click', this.onClickBound, false);
     }
@@ -68,11 +71,12 @@ export default {
 
       // Set up camera
       this.camera = new THREE.PerspectiveCamera(45, width / height, 1, 2000);
-      this.camera.position.z = this.initialCameraZ;
+      this.camera.position.z = this.isMobile ? 450 : this.initialCameraZ;
 
       // Set up renderer
-      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
       this.renderer.setSize(width, height);
+      this.renderer.setPixelRatio(window.devicePixelRatio);
       this.renderer.setClearColor(color4, 1);
       this.$refs.container.appendChild(this.renderer.domElement);
 
@@ -90,64 +94,64 @@ export default {
         const text1 = 'Frontend';
         const textGeometry1 = new TextGeometry(text1, {
           font: font,
-          size: 12,
+          size: this.isMobile ? 7 : 12,
           height: 4,
           curveSegments: 12,
         });
         textGeometry1.computeBoundingBox();
         textGeometry1.center();
 
-        const textMaterial1 = new THREE.MeshPhongMaterial({ color: color1 });
+        const textMaterial1 = new THREE.MeshPhongMaterial({color: color1});
         this.textMesh1 = new THREE.Mesh(textGeometry1, textMaterial1);
-        this.textMesh1.position.y = 8;
+        this.textMesh1.position.y = this.isMobile ? 4 : 8;
         this.scene.add(this.textMesh1);
 
         // Create "Developer" Text
         const text2 = 'Developer';
         const textGeometry2 = new TextGeometry(text2, {
           font: font,
-          size: 12,
+          size: this.isMobile ? 7 : 12,
           height: 4,
           curveSegments: 12,
         });
         textGeometry2.computeBoundingBox();
         textGeometry2.center();
 
-        const textMaterial2 = new THREE.MeshPhongMaterial({ color: color1 });
+        const textMaterial2 = new THREE.MeshPhongMaterial({color: color1});
         this.textMesh2 = new THREE.Mesh(textGeometry2, textMaterial2);
-        this.textMesh2.position.y = -8;
+        this.textMesh2.position.y = this.isMobile ? -4 : -8;
         this.scene.add(this.textMesh2);
 
         // Create Subtitle Text
         const subtitleText = 'Vue - HTML - CSS - JS';
         const subtitleGeometry = new TextGeometry(subtitleText, {
           font: font,
-          size: 4,
+          size: this.isMobile ? 2.5 : 4,
           height: 0.8,
           curveSegments: 12,
         });
         subtitleGeometry.computeBoundingBox();
         subtitleGeometry.center();
 
-        const subtitleMaterial = new THREE.MeshPhongMaterial({ color: color2 });
+        const subtitleMaterial = new THREE.MeshPhongMaterial({color: color2});
         this.subtitleMesh = new THREE.Mesh(subtitleGeometry, subtitleMaterial);
-        this.subtitleMesh.position.y = -24;
+        this.subtitleMesh.position.y = this.isMobile ? -13 : -24;
         this.scene.add(this.subtitleMesh);
 
         // Create Credit Text
         const creditText = 'Made by Jorn Noten';
         const creditGeometry = new TextGeometry(creditText, {
           font: font,
-          size: 2.5,
+          size: this.isMobile ? 1.2 : 2.5,
           height: 0.4,
           curveSegments: 12,
         });
         creditGeometry.computeBoundingBox();
         creditGeometry.center();
 
-        const creditMaterial = new THREE.MeshPhongMaterial({ color: color2 });
+        const creditMaterial = new THREE.MeshPhongMaterial({color: color2});
         const creditMesh = new THREE.Mesh(creditGeometry, creditMaterial);
-        creditMesh.position.y = -34;
+        creditMesh.position.y = this.isMobile ? -20 : -34;
         this.scene.add(creditMesh);
       });
 
@@ -155,7 +159,7 @@ export default {
       this.onClickBound = this.onClick.bind(this);
     },
     createParticles(colorStart, colorEnd) {
-      const particleCount = 5000;
+      const particleCount = this.isMobile ? 1200 : 5000;
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
 
@@ -178,7 +182,7 @@ export default {
       geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
       const material = new THREE.PointsMaterial({
-        size: 2,
+        size: this.isMobile ? 3.5 : 2,
         transparent: true,
         opacity: 0.7,
         sizeAttenuation: true,
@@ -221,10 +225,10 @@ export default {
       // Floating animation for text meshes
       if (this.textMesh1 && this.textMesh2) {
         const floatY = Math.sin(currentTime * 0.001) * 0.5;
-        this.textMesh1.position.y = 8 + floatY;
-        this.textMesh2.position.y = -8 + floatY;
+        this.textMesh1.position.y = (this.isMobile ? 4 : 8) + floatY;
+        this.textMesh2.position.y = (this.isMobile ? -4 : -8) + floatY;
         if (this.subtitleMesh) {
-          this.subtitleMesh.position.y = -24 + floatY;
+          this.subtitleMesh.position.y = (this.isMobile ? -13 : -24) + floatY;
         }
       }
 
@@ -253,6 +257,7 @@ export default {
       this.renderer.render(this.scene, this.camera);
     },
     onWindowResize() {
+      this.isMobile = window.innerWidth < 768;
       const width = window.innerWidth;
       const height = window.innerHeight;
       this.renderer.setSize(width, height);
@@ -262,6 +267,13 @@ export default {
     onMouseMove(event) {
       this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    },
+    onTouchMove(event) {
+      if (event.touches.length > 0) {
+        const touch = event.touches[0];
+        this.mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+        this.mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+      }
     },
     onClick(event) {
       if (this.transitioning) return;
@@ -362,17 +374,3 @@ class AnimatedShape {
   }
 }
 </script>
-
-<style>
-.app-container {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.three-container {
-  width: 100%;
-  height: 100%;
-}
-</style>
