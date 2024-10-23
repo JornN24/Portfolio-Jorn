@@ -72,7 +72,10 @@
     justify-content: center;
 }
 
-.image-wrapper1 img,
+.image-wrapper1 img{
+    max-width: 75%;
+    padding-top: 40px;
+}
 .image-wrapper1 video {
     width: 100%;
     height: auto;

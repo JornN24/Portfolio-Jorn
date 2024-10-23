@@ -57,17 +57,21 @@ export default {
   mounted() {
     this.init();
 
-    // Animate intro text
-    gsap.to('.intro-text', {
-      y: '0%',
-      opacity: 1,
-      duration: 1,
-      ease: 'power1.out',
-    });
+    // Animate intro text from above to the center
+    gsap.fromTo(
+        '.intro-text',
+        { yPercent: -100, opacity: 0 },
+        {
+          yPercent: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power1.out',
+        }
+    );
 
-    // After 5 seconds, animate it out and set showIntroText to false
+    // After 5 seconds, animate it falling down and set showIntroText to false
     gsap.to('.intro-text', {
-      y: '100%',
+      yPercent: 100,
       opacity: 0,
       duration: 1,
       ease: 'power1.in',
@@ -451,11 +455,11 @@ export default {
   height: 100%;
 }
 
-/* Position the intro text at the top */
 .intro-text {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   font-size: 17px;
   color: #C8ACD6;
 }
