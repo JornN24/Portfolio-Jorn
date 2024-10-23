@@ -238,21 +238,23 @@ export default {
       const planetColors = ['#C8ACD6', '#433D8B', '#1230AE', '#9506e0'];
 
       // Updated positions based on device
-      const planetPositions = this.isMobile
-          ? [
-            { x: 0, y: 120, z: 70 },
-            { x: 0, y: 60, z: 37.5 },
-            { x: 0, y: 0, z: 30.5 },
-            { x: 0, y: -60, z: 52.5 },
-            { x: 0, y: -120, z: 0 },
-          ]
-          : [
-            { x: -150, y: 75, z: 70 },
-            { x: -15, y: 140, z: 37.5 },
-            { x: -120, y: -120, z: 30.5 },
-            { x: 120, y: 30, z: 52.5 },
-            { x: 100, y: -105, z: 0 },
-          ];
+      const mobilePositions = [
+        { x: -60, y: 120, z: 70 },
+        { x: 60, y: 60, z: 37.5 },
+        { x: -45, y: 0, z: 30.5 },
+        { x: 45, y: -60, z: 52.5 },
+        { x: -30, y: -120, z: 0 },
+      ];
+
+      const desktopPositions = [
+        { x: -150, y: 75, z: 70 },
+        { x: -15, y: 140, z: 37.5 },
+        { x: -120, y: -120, z: 30.5 },
+        { x: 120, y: 30, z: 52.5 },
+        { x: 100, y: -105, z: 0 },
+      ];
+
+      const planetPositions = this.isMobile ? mobilePositions : desktopPositions;
 
       // Define available shapes and their corresponding creation functions
       const shapeCreators = [
@@ -349,9 +351,17 @@ export default {
       this.renderer.setSize(window.innerWidth, window.innerHeight);
 
       // Reposition planets for responsiveness
+      const mobilePositions = [
+        { x: -60, y: 120, z: 70 },
+        { x: 60, y: 60, z: 37.5 },
+        { x: -45, y: 0, z: 30.5 },
+        { x: 45, y: -60, z: 52.5 },
+        { x: -30, y: -120, z: 0 },
+      ];
+
       this.planets.forEach((planet, index) => {
         const newPosition = this.isMobile
-            ? { x: 0, y: 120 - index * 60, z: 50 }
+            ? mobilePositions[index]
             : this.planetInitialPositions[index];
         gsap.to(planet.position, {
           x: newPosition.x,
