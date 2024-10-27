@@ -598,6 +598,7 @@ export default {
 .skill-card p {
   font-size: 1rem;
   color: #e0e0e0;
+  padding: 20px;
 }
 
 /* Footer Styles */
