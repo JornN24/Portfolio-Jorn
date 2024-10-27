@@ -118,7 +118,7 @@
               <h4>C#</h4>
             </div>
             <div class="skill-card-back">
-              <p>Proficient in C# for developing back-end solutions, game development, and understanding object-oriented programming.</p>
+              <p>Skilled in C# for Unity game development, specializing in gameplay mechanics and performance optimization.</p>
             </div>
           </div>
         </div>
@@ -388,11 +388,14 @@ export default {
   line-height: 1.6;
 }
 
-.about-details {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  color: #e0e0e0;
+.about-details a {
+  color: #C8ACD6;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.about-details a:hover {
+  color: #ffffff;
 }
 
 .about-details-left,
@@ -538,7 +541,8 @@ export default {
 .skill-card {
   perspective: 1000px;
   width: 300px;
-  height: 200px;
+  height: 300px;
+  margin: 0 auto;
 }
 
 .skill-card-inner {
@@ -678,39 +682,6 @@ export default {
   color: #8b949e;
 }
 
-
-/* Tablet Styles */
-@media (max-width: 1023px) and (min-width: 768px) {
-  .about-content {
-    flex-direction: row;
-    padding: 30px;
-  }
-
-  .about-image {
-    width: 350px;
-    height: 600px;
-  }
-
-  .about-text {
-    margin-left: 20px;
-    max-width: 500px;
-  }
-
-  /* Maintain three columns on tablets */
-  .skill-set {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .skill-card {
-    width: 280px;
-    height: 190px;
-  }
-
-  .footer .contact-cards {
-    gap: 30px;
-  }
-}
-
 /* Mobile Styles */
 @media (max-width: 767px) {
   .header-section {
@@ -770,26 +741,21 @@ export default {
     font-size: 0.9rem;
   }
 
-  /* Stack skill cards on smaller devices */
   .skill-set {
     grid-template-columns: 1fr;
     gap: 20px;
   }
 
   .skill-card {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
+    width: 250px;
+    height: 250px;
     margin: 0 auto;
+    perspective: 1000px;
   }
 
-  .skill {
+  .skill-card-inner {
     width: 100%;
-    justify-content: flex-start;
-  }
-
-  .skill-bar {
-    width: 60%;
+    height: 100%;
   }
 
   .services h2 {
@@ -836,8 +802,7 @@ export default {
     font-size: 1.5rem;
   }
 }
-
-/* Small Mobile Devices */
+/* Small Phones Styles */
 @media (max-width: 480px) {
   .header-section {
     padding: 80px 15px;
@@ -849,100 +814,62 @@ export default {
   }
 
   .header-name {
-    font-size: 1.8rem;
+    font-size: 1.75rem;
   }
 
   .header-title {
     font-size: 0.9rem;
   }
 
-  .about-section {
-    padding: 40px 15px;
-  }
-
   .about-content {
-    padding: 10px;
+    padding: 15px;
   }
 
   .about-image {
-    width: 100%;
-    height: auto;
-  }
-
-  .about-text h2 {
-    font-size: 1.8rem;
-  }
-
-  .about-text h3 {
-    font-size: 2rem;
-  }
-
-  .about-text p {
-    font-size: 0.9rem;
-  }
-
-  .about-details li {
-    font-size: 16px;
+    margin-bottom: 15px;
   }
 
   .download-cv-button {
     font-size: 0.9rem;
-    padding: 8px 16px;
   }
 
-  .skills-section h2 {
-    font-size: 1.5rem;
+  .skills-section h2,
+  .services h2,
+  .footer-title {
+    font-size: 1.25rem;
   }
 
-  .skills-section p {
-    font-size: 0.9rem;
-  }
-
-  /* Stack skill cards on small devices */
-  .skill-set {
-    grid-template-columns: 1fr;
-    gap: 100px;
+  .skills-section p,
+  .footer-description {
+    font-size: 0.8rem;
   }
 
   .skill-card {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-    margin-top: 100px;
-  }
-
-  .services h2 {
-    font-size: 1.5rem;
+    width: 200px;
+    height: 200px;
   }
 
   .services h3 {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .footer {
-    padding: 40px 15px;
-  }
-
-  .footer-title {
-    font-size: 1.5rem;
-  }
-
-  .footer-description {
-    font-size: 0.9rem;
+    padding: 30px 15px;
   }
 
   .footer .social-link {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .footer .contact-card {
-    width: 100%;
-    max-width: 250px;
-    padding: 15px;
+    max-width: 100%;
+    padding: 10px;
   }
 
   .footer .contact-card i {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
 }
+
+
 </style>
